@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'sprockets/autoload'
 require 'sprockets/source_map_utils'
+require 'digest/md5'
 
 module Sprockets
   # Processor engine class for the CoffeeScript compiler.

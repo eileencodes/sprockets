@@ -11,6 +11,8 @@ require 'sprockets/resolve'
 require 'sprockets/transformers'
 require 'sprockets/uri_utils'
 require 'sprockets/unloaded_asset'
+require 'objspace'
+ObjectSpace.trace_object_allocations_start
 
 module Sprockets
 
@@ -159,6 +161,7 @@ module Sprockets
               map: []
             }
           })
+          p ObjectSpace.allocation_sourcefile(result) => ObjectSpace.allocation_sourceline(result)
           validate_processor_result!(result)
           source = result.delete(:data)
           metadata = result

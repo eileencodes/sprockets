@@ -157,7 +157,7 @@ module Sprockets
         raise TypeError, "processor :data was expected to be a String, but as #{result[:data].class}"
       end
 
-      result.each do |key, value|
+      result.each_pair do |key, value|
         if !key.instance_of?(Symbol)
           raise TypeError, "processor metadata[#{key.inspect}] expected to be a Symbol"
         end
@@ -179,10 +179,15 @@ module Sprockets
     def valid_processor_metadata_value?(value)
       if VALID_METADATA_VALUE_TYPES_HASH[value.class]
         true
-      elsif VALID_METADATA_COMPOUND_TYPES_HASH[value.class]
-        value.all? { |v| valid_processor_metadata_value?(v) }
       else
-        false
+        case value
+        when Array, Set
+          value.all? { |v| valid_processor_metadata_value?(v) }
+        when Hash
+          value.each_pair { |k,v| return false unless valid_processor_metadata_value?(v) && valid_processor_metadata_value?(k) }
+        else
+          false
+        end
       end
     end
   end
